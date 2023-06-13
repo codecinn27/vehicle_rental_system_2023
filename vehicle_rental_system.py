@@ -1,5 +1,5 @@
 #Topic: Vehicle Rental System
-
+from data_list import vehicle_list
 #parent class
 class Vehicle:
 
@@ -52,7 +52,8 @@ class VehicleRentalSystem:
     #the class bike or car is store as value
     def add_vehicle(self, unique_id, vehicle):
         self.vehicle_dict[unique_id] = vehicle
-        print("Vehicle added successfully.")
+        #uncomment to test the code's functionality after adding it
+        # print("Vehicle added successfully.")
 
     #print all the document store inside the dictionary create when calling function add_vehicle
     def show_list(self):
@@ -97,30 +98,74 @@ class VehicleRentalSystem:
                 print("Rental Price:", vehicle.rental_price)
                 print("Wheel Size:", vehicle.wheel_size)
                 print("--------------------")
-        
+
+    
+    #delete vehicle from the list
+    def remove_vehicle(self, id):
+        if id in self.vehicle_dict:
+            del self.vehicle_dict[id]
+            print(f"Vehicle with unique ID '{id}' has been removed.")
+        else:
+            print(f"Vehicle with unique ID '{id}' does not exist in the rental system.")
+
+    
+    #def reserve_vehicle or rent vehicle
+    #def return  vehicle
+    #def calculate_rental_cost
 #example of the system
-system = VehicleRentalSystem()
 
-#storing information
-#using list of tuples
-vehicle_list = [
-    (Car("Perodua", "Myvi", 2019, 20000, 100, "WUL7038",4,5), "P0001"),
-    (Car("Proton", "Saga", 2011, 45000, 80, "VAP2302",4,5), "P0002"),
-    (Car("Proton", "Persona", 2020, 10000, 120, "MAP311",4,5), "P0003"),
-    (Car("Proton", "X50", 2021, 9000, 150, "VPP1132",4,7), "P0004"),
-    (Bike("Yamaha", "LC135", 2017, 23000, 50, "WA2310P",27.5), "M0001"),
-    (Bike("Yamaha", "Y15", 2019, 25000, 60, "PA2310P",29), "M0002"),
-    (Bike("Honda", "RS150", 2020, 40000, 55, "JA2034P",29), "M0003"),
-    (Bike("Honda", "EX5", 2016, 50000, 45, "MUP3043",27.5), "M0004")
-]
+def print_menu():
+    print("Welcome to the Vehicle Rental System!")
+    print("1. Show List of Bikes")
+    print("2. Rent a Bike")
+    print("3. Show List of Cars")
+    print("4. Rent a Car")
+    print("5. Show List of All Vehicles")
+    print("0. Exit")
 
-#for loop and a list of tuples, you can conveniently add multiple vehicles into VehicleRentalSystem 
-# without having to repeat the add_vehicle calls for each vehicle individually.
-for vehicle, unique_id in vehicle_list:
-    system.add_vehicle(unique_id, vehicle)
+#def rent_bike(system):
+#def rent_car(system):
 
-#print out all the added document to confirm whether the code works or not
-# system.show_list_car()
+
+def main():
+    #call out system and store it as a object
+    system = VehicleRentalSystem()
+
+    #for loop and a list of tuples, you can conveniently add multiple vehicles into VehicleRentalSystem 
+    # without having to repeat the add_vehicle calls for each vehicle individually.
+    for vehicle, unique_id in vehicle_list:
+        system.add_vehicle(unique_id, vehicle)
+
+    while True:
+        print_menu()
+        choice = input("Enter your choice: ")
+        
+        # Use a dictionary to map the choice to the corresponding function
+        #without lambda expression these functions will be called immediately when the menu_options dictionary is defined
+        # rather than being called when the user selects the corresponding menu option
+        #therefore, wrap the function calls in lambda functions
+        #This will delay the execution of the functions until they are called later on.
+        menu_options = {
+            #print out all the bike that store in the dictionary
+            "1": lambda : system.show_list_bike(),
+            #print out all the car that store in the dictionary
+            "3": lambda : system.show_list_car(),
+            #print out all the added document 
+            "5": lambda : system.show_list(),
+            "0": lambda : exit
+        }
+
+        if choice in menu_options:
+            print("\n")
+            #call out the function based on user input 
+            menu_options[choice]()
+        else:
+            print("Invalid input, please try again\n")
+    
+
+main()
+
+
 
 
 
