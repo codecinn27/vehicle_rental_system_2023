@@ -1,6 +1,6 @@
 #Topic: Vehicle Rental System
 from data_list import vehicle_list
-from vehicle_rental_system import Car, Bike
+from data_type import Car, Bike
 
 #use the sys module to call the exit() function
 import sys

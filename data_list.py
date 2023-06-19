@@ -1,4 +1,4 @@
-from vehicle_rental_system import Car, Bike
+from data_type import Car, Bike
 
 #storing information in another module
 #using list of tuple
