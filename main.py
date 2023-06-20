@@ -1,5 +1,4 @@
 #Topic: Vehicle Rental System
-from data_list import vehicle_list
 from data_type import Car, Bike
 
 #use the sys module to call the exit() function
@@ -13,7 +12,7 @@ class VehicleRentalSystem:
 
     #add the vehicle information, key as the unique_id and all the vehicle information store as value
     #the class bike or car is store as value
-    def add_vehicle(self, unique_id, vehicle):
+    def add_vehicle(self, vehicle,unique_id):
         self.vehicle_dict[unique_id] = vehicle
         #uncomment to test the code's functionality after adding it
         # print("Vehicle added successfully.")
@@ -35,34 +34,28 @@ class VehicleRentalSystem:
     def show_list_car(self):
         for unique_id, vehicle in self.vehicle_dict.items():
             if isinstance(vehicle, Car):
-                print("-------------------")
+                vehicle.print_info()
                 print("Unique ID:", unique_id)
-                print("Vehicle Details:")
-                print("Brand:", vehicle.brand)
-                print("Model:", vehicle.model)
-                print("Year:", vehicle.year)
-                print("Mileage:", vehicle.mileage)
-                print("Rental Price:", vehicle.rental_price)
-                print("Door:", vehicle.doors)
-                print("Seat:", vehicle.seats)
                 print("--------------------")
 
     #print all the bike list
     def show_list_bike(self):
         for unique_id, vehicle in self.vehicle_dict.items():
             if isinstance(vehicle, Bike):
-                print("-------------------")
+                vehicle.print_info()
                 print("Unique ID:", unique_id)
-                print("Vehicle Details:")
-                print("Brand:", vehicle.brand)
-                print("Model:", vehicle.model)
-                print("Year:", vehicle.year)
-                print("Mileage:", vehicle.mileage)
-                print("Rental Price:", vehicle.rental_price)
-                print("Wheel Size:", vehicle.wheel_size)
-                print("--------------------")
-
+                print("-------------------")
     
+    #store vechicle into separete dictionary based on its type
+    def get_vehicle_list(self, type):
+        #create a temporary dictionary first, so that later can return this list
+        vehicle_list = {}
+        for unique_id, vehicle in self.vehicle_dict.items():
+            if isinstance(vehicle,type):
+                vehicle_list[unique_id] = vehicle
+        return vehicle_list
+
+
     #delete vehicle from the list
     def remove_vehicle(self, id):
         if id in self.vehicle_dict:
@@ -71,10 +64,39 @@ class VehicleRentalSystem:
         else:
             print(f"Vehicle with unique ID '{id}' does not exist in the rental system.")
 
-    
-    def reserve_vehicle(self, unique_id):
-        if unique_id in self.vehicle_dict:
-            vehicle = self.vehicle_dict[unique_id]
+    def reserve_vehicle(self, id):
+        if id in self.vehicle_dict:
+            vehicle = self.vehicle_dict[id]
+            if vehicle.get_availability():
+                #if vehicle is available then, reserve the vehicle
+                vehicle.set_availability(False)
+                print(f"Vehicle with unique ID '{id}' has been reserved.")
+            else:
+                print(f"Vehicle with unique ID '{id}' is not available for reservation.")
+        else:
+            print(f"Vehicle with unique ID '{id}' does not exist in the rental system.")
+
+    #rent a bike
+    def rent_bike(system):
+        bike_list = system.get_vehicle_list(Bike)
+        print("Bike List:")
+        for id, vehicle in bike_list.items():
+            if vehicle.get_availability():
+                print("-------------------")
+                print("Unique ID:", id)
+                print("Vehicle Details:")
+                print("Brand:", vehicle.brand)
+                print("Model:", vehicle.model)
+                print("Year:", vehicle.year)
+                print("Mileage:", vehicle.mileage)
+                print("Rental Price:", vehicle.rental_price)
+                print("Wheel Size:",vehicle.wheel_size)
+                print("--------------------")
+        bike_id = input("Enter the unique ID of the bike you want to rent (or 0 to go back): ")
+        if bike_id == "0":
+            return
+        system.reserve_vehicle(bike_id)
+        print("Bike rented successfully!")
         
     #def return  vehicle
     #def calculate_rental_cost
@@ -100,7 +122,7 @@ def main():
     #for loop and a list of tuples, you can conveniently add multiple vehicles into VehicleRentalSystem 
     # without having to repeat the add_vehicle calls for each vehicle individually.
     for vehicle, unique_id in vehicle_list:
-        system.add_vehicle(unique_id, vehicle)
+        system.add_vehicle(vehicle,unique_id)
 
     while True:
         print_menu()
@@ -114,6 +136,8 @@ def main():
         menu_options = {
             #print out all the bike that store in the dictionary
             "1": lambda : system.show_list_bike(),
+            #rent a bike
+            "2": lambda : system.rent_bike(),
             #print out all the car that store in the dictionary
             "3": lambda : system.show_list_car(),
             #print out all the added document 
